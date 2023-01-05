@@ -3,7 +3,7 @@ package collection_test
 import (
 	"testing"
 
-	"asd.me/pkg/collection"
+	"github.com/asd/pkg/collection"
 )
 
 type pair struct {
