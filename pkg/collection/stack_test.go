@@ -1,9 +1,7 @@
-package collection_test
+package collection
 
 import (
 	"testing"
-
-	"github.com/asd/pkg/collection"
 )
 
 type pair struct {
@@ -13,22 +11,22 @@ type pair struct {
 
 var staticTests = []struct {
 	description string
-	input       *collection.Stack[int]
+	input       *Stack[int]
 	empty       bool
 	size        int
 	top         pair
 }{
-	{"empty stack", newStack([]int{}), true, 0, pair{0, collection.ErrEmptyStack}},
-	{"stack with items", newStack([]int{1, 2, 3}), false, 3, pair{3, nil}},
+	{"empty stack", NewStack[int](), true, 0, pair{0, ErrEmptyStack}},
+	{"stack with items", NewStack(1, 2, 3), false, 3, pair{3, nil}},
 }
 
 var popTests = []struct {
 	description string
-	input       *collection.Stack[int]
+	input       *Stack[int]
 	item        pair
 }{
-	{"empty stack pop item", newStack([]int{}), pair{0, collection.ErrEmptyStack}},
-	{"stack with items pop item", newStack([]int{1, 2, 3}), pair{3, nil}},
+	{"empty stack pop item", NewStack[int](), pair{0, ErrEmptyStack}},
+	{"stack with items pop item", NewStack(1, 2, 3), pair{3, nil}},
 }
 
 var pushTests = []struct {
@@ -79,7 +77,7 @@ func TestPush(t *testing.T) {
 	for i, tt := range pushTests {
 		t.Logf("Test %v: %s\n", i, tt.description)
 
-		stack := &collection.Stack[int]{}
+		stack := NewStack[int]()
 		for _, item := range tt.items {
 			stack.Push(item)
 		}
@@ -88,12 +86,4 @@ func TestPush(t *testing.T) {
 			t.Errorf("stack size %v, want %v\n", stack.Size(), len(tt.items))
 		}
 	}
-}
-
-func newStack(slice []int) *collection.Stack[int] {
-	stack := &collection.Stack[int]{}
-	for _, x := range slice {
-		stack.Push(x)
-	}
-	return stack
 }

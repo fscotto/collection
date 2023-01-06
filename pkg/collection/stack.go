@@ -1,6 +1,9 @@
 package collection
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 var (
 	// ErrEmptyStack is error when you have an empty stack structure
@@ -10,6 +13,15 @@ var (
 // Stack is an structure with method for handle underlying slice as a stack.
 type Stack[E any] struct {
 	items []E
+}
+
+// NewStack is a constructor function for stack
+func NewStack[E any](items ...E) *Stack[E] {
+	stack := &Stack[E]{}
+	for _, item := range items {
+		stack.Push(item)
+	}
+	return stack
 }
 
 // Size returns the number of items in the stack.
@@ -46,4 +58,21 @@ func (s *Stack[E]) Pop() (E, error) {
 func (s *Stack[E]) Push(item E) error {
 	s.items = append(s.items, item)
 	return nil
+}
+
+func (s *Stack[E]) String() string {
+	var sb strings.Builder
+	sb.WriteString("[")
+	for i := 0; i < s.Size(); i++ {
+		var str string
+		item := s.items[i]
+		if i >= s.Size()-1 {
+			str = fmt.Sprintf("%v", item)
+		} else {
+			str = fmt.Sprintf("%v, ", item)
+		}
+		sb.WriteString(str)
+	}
+	sb.WriteString("]")
+	return sb.String()
 }

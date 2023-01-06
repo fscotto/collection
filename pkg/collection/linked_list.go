@@ -70,6 +70,14 @@ type LinkedList[E any] struct {
 	size int
 }
 
+func NewLinkedList[E any](items ...E) *LinkedList[E] {
+	lst := &LinkedList[E]{}
+	for _, item := range items {
+		lst.PushBack(item)
+	}
+	return lst
+}
+
 func (l *LinkedList[E]) Iterator() Iterator[E] {
 	if l.Empty() {
 		return &emptyListIterator[E]{}
