@@ -2,24 +2,9 @@ package collection
 
 import (
 	"fmt"
-	"log"
+	"reflect"
 	"strings"
 )
-
-var (
-	ErrPositionNegative = fmt.Errorf("position can not be negative")
-	ErrEmptyList        = fmt.Errorf("no nodes in list")
-	ErrNodeNotFound     = fmt.Errorf("node not found")
-)
-
-type ErrIndexOutOfBound struct {
-	index int
-	size  int
-}
-
-func (e ErrIndexOutOfBound) Error() string {
-	return fmt.Sprintf("index %d out of bound from range %d and %d", e.index, 0, e.size-1)
-}
 
 type node[E any] struct {
 	value E
@@ -112,7 +97,7 @@ func (l *LinkedList[E]) GetAt(pos int) (E, error) {
 // findNode returns node at given position from linked list
 func (l *LinkedList[E]) findNode(pos int) (*node[E], error) {
 	if l.Empty() {
-		return nil, ErrEmptyList
+		return nil, ErrEmptyCollection
 	}
 
 	ptr := l.head
@@ -129,6 +114,30 @@ func (l *LinkedList[E]) findNode(pos int) (*node[E], error) {
 	}
 
 	return ptr, nil
+}
+
+func (l *LinkedList[E]) Contains(item E) bool {
+	for it := l.Iterator(); it.HasNext(); {
+		x := it.Next()
+		if reflect.DeepEqual(item, x) {
+			return true
+		}
+	}
+	return false
+}
+
+func (l *LinkedList[E]) Index(item E) (int, error) {
+	for it := l.Iterator(); it.HasNext(); {
+		i, x := it.NextWithIndex()
+		if reflect.DeepEqual(item, x) {
+			return i, nil
+		}
+	}
+	return 0, ErrItemNotFound{item}
+}
+
+func (l *LinkedList[E]) Push(item E) {
+	l.PushBack(item)
 }
 
 func (l *LinkedList[E]) PushFront(item E) {
@@ -175,17 +184,23 @@ func (l *LinkedList[E]) PushAt(item E, pos int) {
 	l.size++
 }
 
+func (l *LinkedList[E]) Delete(item E) error {
+	pos, err := l.Index(item)
+	if err != nil {
+		return err
+	}
+	return l.DeleteAt(pos)
+}
+
 // DeleteAt deletes node at given position from linked list
 func (l *LinkedList[E]) DeleteAt(pos int) error {
 	// validate the position
 	if pos < 0 {
-		log.Println("position can not be negative")
 		return ErrPositionNegative
 	}
 
 	if l.size == 0 {
-		log.Println("no nodes in list")
-		return ErrEmptyList
+		return ErrEmptyCollection
 	}
 
 	if pos == 0 {
@@ -199,7 +214,6 @@ func (l *LinkedList[E]) DeleteAt(pos int) error {
 	} else {
 		prevNode, _ := l.findNode(pos - 1)
 		if prevNode == nil {
-			log.Println("node not found")
 			return ErrNodeNotFound
 		}
 		myNode, err := l.findNode(pos)

@@ -5,11 +5,6 @@ import (
 	"strings"
 )
 
-var (
-	// ErrEmptyStack is error when you have an empty stack structure
-	ErrEmptyStack = fmt.Errorf("this stack is empty")
-)
-
 // Stack is an structure with method for handle underlying slice as a stack.
 type Stack[E any] struct {
 	items []E
@@ -35,16 +30,16 @@ func (s *Stack[E]) Empty() bool {
 }
 
 // Top get first item in the stack structure, but
-// if stack is empty well this method return ErrEmptyStack error.
+// if stack is empty well this method return ErrEmptyCollection error.
 func (s *Stack[E]) Top() (E, error) {
 	if s.Empty() {
-		return *new(E), ErrEmptyStack
+		return *new(E), ErrEmptyCollection
 	}
 	return s.items[s.Size()-1], nil
 }
 
 // Pop get and remove first item in the stack structure, but
-// if stack is empty well this method return ErrEmptyStack error.
+// if stack is empty well this method return ErrEmptyCollection error.
 func (s *Stack[E]) Pop() (E, error) {
 	item, err := s.Top()
 	if err != nil {

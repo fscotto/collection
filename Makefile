@@ -12,3 +12,6 @@ dep:
 
 vet:
 	go vet
+
+build:
+	go build -o ./build

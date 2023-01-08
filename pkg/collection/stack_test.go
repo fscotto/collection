@@ -16,7 +16,7 @@ var staticTests = []struct {
 	size        int
 	top         pair
 }{
-	{"empty stack", NewStack[int](), true, 0, pair{0, ErrEmptyStack}},
+	{"empty stack", NewStack[int](), true, 0, pair{0, ErrEmptyCollection}},
 	{"stack with items", NewStack(1, 2, 3), false, 3, pair{3, nil}},
 }
 
@@ -25,7 +25,7 @@ var popTests = []struct {
 	input       *Stack[int]
 	item        pair
 }{
-	{"empty stack pop item", NewStack[int](), pair{0, ErrEmptyStack}},
+	{"empty stack pop item", NewStack[int](), pair{0, ErrEmptyCollection}},
 	{"stack with items pop item", NewStack(1, 2, 3), pair{3, nil}},
 }
 
