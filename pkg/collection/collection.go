@@ -34,3 +34,16 @@ type List[E any] interface {
 type Set[E comparable] interface {
 	Collection[E]
 }
+
+type Map[K comparable, V any] interface {
+	Empty() bool
+	Size() int
+	Get(key K) (V, bool)
+	Put(key K, value V)
+	ContainsKey(key K) bool
+	ContainsValue(value V) bool
+	Delete(key K) bool
+	Keys() Set[K]
+	Values() Collection[V]
+	EntryList() Collection[*Entry[K, V]]
+}
