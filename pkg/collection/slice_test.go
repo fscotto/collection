@@ -328,3 +328,60 @@ func TestSlice_Index(t *testing.T) {
 		}
 	}
 }
+
+func TestSlice_Set(t *testing.T) {
+	useCases := []struct {
+		description string
+		original    *Slice[int]
+		modified    *Slice[int]
+		pos         int
+		item        int
+		err         error
+	}{
+		{description: "change item in first position in singleton list",
+			original: NewSlice[int](0),
+			modified: NewSlice(1),
+			pos:      0,
+			item:     1},
+		{description: "change item in first position in full list",
+			original: NewSlice(1, 2, 3),
+			modified: NewSlice(0, 2, 3),
+			pos:      0,
+			item:     0},
+		{description: "change item in middle position in full list",
+			original: NewSlice(1, 2, 3),
+			modified: NewSlice(1, 0, 3),
+			pos:      1,
+			item:     0},
+		{description: "add item in last position in full list",
+			original: NewSlice(1, 2, 3),
+			modified: NewSlice(1, 2, 0),
+			pos:      2,
+			item:     0},
+		{description: "no items in list return ErrEmptyCollection",
+			original: NewSlice[int](),
+			modified: NewSlice[int](),
+			pos:      0,
+			item:     0,
+			err:      ErrEmptyCollection},
+		{description: "get item with negative position",
+			original: NewSlice(1, 2, 3),
+			modified: NewSlice(1, 2, 3),
+			pos:      -1,
+			item:     0,
+			err:      ErrPositionNegative},
+		{description: "get item with index out of bound",
+			original: NewSlice(1, 2, 3),
+			modified: NewSlice(1, 2, 3),
+			pos:      4,
+			item:     0,
+			err:      ErrIndexOutOfBound{4, 3}},
+	}
+
+	for _, tt := range useCases {
+		err := tt.original.Set(tt.item, tt.pos)
+		if !reflect.DeepEqual(tt.original, tt.modified) || tt.err != err {
+			t.Errorf("test: %s want %v got %v", tt.description, tt.modified, tt.original)
+		}
+	}
+}

@@ -230,6 +230,63 @@ func TestLinkedList_PushFront(t *testing.T) {
 	}
 }
 
+func TestLinkedList_Set(t *testing.T) {
+	useCases := []struct {
+		description string
+		original    *LinkedList[int]
+		modified    *LinkedList[int]
+		pos         int
+		item        int
+		err         error
+	}{
+		{description: "change item in first position in singleton list",
+			original: NewLinkedList[int](0),
+			modified: NewLinkedList(1),
+			pos:      0,
+			item:     1},
+		{description: "change item in first position in full list",
+			original: NewLinkedList(1, 2, 3),
+			modified: NewLinkedList(0, 2, 3),
+			pos:      0,
+			item:     0},
+		{description: "change item in middle position in full list",
+			original: NewLinkedList(1, 2, 3),
+			modified: NewLinkedList(1, 0, 3),
+			pos:      1,
+			item:     0},
+		{description: "add item in last position in full list",
+			original: NewLinkedList(1, 2, 3),
+			modified: NewLinkedList(1, 2, 0),
+			pos:      2,
+			item:     0},
+		{description: "no items in list return ErrEmptyCollection",
+			original: NewLinkedList[int](),
+			modified: NewLinkedList[int](),
+			pos:      0,
+			item:     0,
+			err:      ErrEmptyCollection},
+		{description: "get item with negative position",
+			original: NewLinkedList(1, 2, 3),
+			modified: NewLinkedList(1, 2, 3),
+			pos:      -1,
+			item:     0,
+			err:      ErrPositionNegative},
+		{description: "get item with index out of bound",
+			original: NewLinkedList(1, 2, 3),
+			modified: NewLinkedList(1, 2, 3),
+			pos:      4,
+			item:     0,
+			err:      ErrIndexOutOfBound{4, 3}},
+	}
+
+	for _, tt := range useCases {
+		err := tt.original.Set(tt.item, tt.pos)
+		if !compareLists(tt.original, tt.modified) || tt.err != err {
+			t.Errorf("test: %s want %v got %v", tt.description, tt.modified, tt.original)
+		}
+	}
+}
+
 func TestLinkedList_Delete(t *testing.T) {
 	useCases := []struct {
 		description string

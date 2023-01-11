@@ -158,6 +158,20 @@ func (s *Slice[E]) Index(item E) (int, error) {
 	return 0, ErrItemNotFound{item}
 }
 
+func (s *Slice[E]) Set(item E, pos int) error {
+	if s.Empty() {
+		return ErrEmptyCollection
+	}
+	if pos < 0 {
+		return ErrPositionNegative
+	}
+	if pos < 0 || pos >= s.Size() {
+		return ErrIndexOutOfBound{pos, s.Size()}
+	}
+	s.inner[pos] = item
+	return nil
+}
+
 func (s *Slice[E]) String() string {
 	var sb strings.Builder
 	sb.WriteString("[")

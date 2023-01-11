@@ -25,6 +25,7 @@ type List[E any] interface {
 	Front() (E, error)
 	PushBack(item E)
 	PushFront(item E)
+	Set(item E, pos int) error
 	Index(item E) (int, error)
 	GetAt(pos int) (E, error)
 	PushAt(item E, pos int)

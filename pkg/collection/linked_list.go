@@ -230,6 +230,20 @@ func (l *LinkedList[E]) DeleteAt(pos int) error {
 	return nil
 }
 
+func (l *LinkedList[E]) Set(item E, pos int) error {
+	n, err := l.findNode(pos)
+	if err != nil {
+		return err
+	}
+
+	if n == nil {
+		return ErrNodeNotFound
+	}
+
+	n.value = item
+	return nil
+}
+
 func (l *LinkedList[E]) String() string {
 	var sb strings.Builder
 	sb.WriteString("[")
